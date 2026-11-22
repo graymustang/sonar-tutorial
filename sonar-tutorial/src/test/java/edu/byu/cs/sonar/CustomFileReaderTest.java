@@ -43,4 +43,42 @@ class CustomFileReaderTest {
         sut.setNewSentence(betterSentence);
         assertEquals(betterSentence, sut.getNewSentence());
     }
+
+    @Test
+    void testToString() {
+        sut.setNewSentence("Hello");
+        assertEquals("Hello 0", sut.toString());
+    }
+
+    @Test
+    void testEqualsSameValues() {
+        CustomFileReader other = new CustomFileReader("readMe1.txt");
+        assertEquals(sut, other);
+    }
+
+    @Test
+    void testEqualsDifferentSentence() {
+        CustomFileReader other = new CustomFileReader("readMe1.txt");
+        other.setNewSentence("Different");
+        assertNotEquals(sut, other);
+    }
+
+    @Test
+    void testEqualsDifferentCount() throws FileNotFoundException {
+        CustomFileReader other = new CustomFileReader("readMe1.txt");
+        other.howManyWordsInFile();
+        assertNotEquals(sut, other);
+    }
+
+    @Test
+    void testEqualsDifferentFile() {
+        CustomFileReader other = new CustomFileReader("readMe2.txt");
+        assertNotEquals(sut, other);
+    }
+
+    @Test
+    void testEqualsDifferentObject() {
+        assertNotEquals("Not a CustomFileReader", sut);
+    }
+
 }

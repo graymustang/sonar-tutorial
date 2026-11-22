@@ -1,5 +1,5 @@
 package edu.byu.cs.sonar;
-
+import java.io.FileNotFoundException;
 /**
  * This program has the same functionality of last week's program.
  * The only changes are in comments, the three @Override functions,
@@ -17,10 +17,12 @@ class Main {
      * @param args listed above
      */
     public static void main(final String[] args) {
-        final CustomFileReader reader1 = new CustomFileReader(args[0]);
-        final CustomFileReader reader2 = new CustomFileReader(args[1]);
-        final CustomFileReader reader3 = new CustomFileReader(args[2]);
-        final int numberOfWords = Integer.parseInt(args[3]);
+        try {
+            final CustomFileReader reader1 = new CustomFileReader(args[0]);
+            final CustomFileReader reader2 = new CustomFileReader(args[1]);
+            final CustomFileReader reader3 = new CustomFileReader(args[2]);
+            final int numberOfWords = Integer.parseInt(args[3]);
+
 
         for (int i = 0; i < numberOfWords; i++) {
             int howManyWords;
@@ -34,5 +36,7 @@ class Main {
         reader1.setNewSentence(sentenceForReader1);
 
         System.out.println(reader1.getNewSentence());
-    }
+    } catch (FileNotFoundException e){
+        System.out.println("Could not find the file: " + e.getMessage());
+    }}
 }

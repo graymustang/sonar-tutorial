@@ -11,7 +11,7 @@ class CustomFileReader {
     /**
      * The scanner that will read the dictionary
      */
-    private Scanner s;
+    private String path;
 
     /**
      * The sentence that will be constructed
@@ -27,30 +27,34 @@ class CustomFileReader {
      *
      * @param fileName the file to be read in
      */
+
     CustomFileReader(final String fileName) {
+        path = fileName;
         newSentence = "";
-        try {
-            s = new Scanner(new FileReader(fileName));
-        } catch (FileNotFoundException c) {
-            newSentence = "This isn't going to work out";
-        } finally {
-            count = 0;
-        }
+        count = 0;
     }
+
+
 
     /**
      * This will find how many words are in the text file provided
      *
      * @return how many words in the file
      */
-    int howManyWordsInFile() {
 
-        while (s.hasNext()) {
-            s.next();
-            count++;
+    int howManyWordsInFile() throws FileNotFoundException {
+        count = 0;
+
+        try (Scanner s = createScanner()) {
+            while (s.hasNext()) {
+                s.next();
+                count++;
+            }
         }
+
         return count;
     }
+
 
     /**
      * This will return the word at the given index in the text file
@@ -58,13 +62,19 @@ class CustomFileReader {
      * @param index which number word should be taken back
      * @return correct word
      */
-    String returnThatWord(final int index) {
+
+    String returnThatWord(final int index) throws FileNotFoundException {
         String returnWord = "";
-        for (int i = 0; i < index; i++) {
-            returnWord = s.next();
+
+        try (Scanner s = createScanner()) {
+            for (int i = 0; i < index; i++) {
+                returnWord = s.next();
+            }
         }
+
         return returnWord;
     }
+
 
     /**
      * This will search for a word that contains the same letter as the
@@ -72,15 +82,19 @@ class CustomFileReader {
      *
      * @param letter eventually will be the character we are looking for in the word
      */
-    void findNewWord(final CharSequence letter) {
-        String word = s.next();
 
-        while (!word.contains(letter)) {
-            word = s.next();
+    void findNewWord(final CharSequence letter) throws FileNotFoundException {
+        try (Scanner s = createScanner()) {
+            String word = s.next();
+
+            while (!word.contains(letter)) {
+                word = s.next();
+            }
+
+            newSentence = newSentence + word + " ";
         }
-
-        newSentence = newSentence + word + " ";
     }
+
 
     /**
      * This is a standard getter
@@ -115,11 +129,17 @@ class CustomFileReader {
      *
      * @return the number of words in the dictionary
      */
-    private Scanner getScanner() {
-        return s;
+    private String getPath() {
+        return path;
     }
 
-    /**
+
+private Scanner createScanner() throws FileNotFoundException {
+    return new Scanner(new FileReader(path));
+}
+
+
+/**
      * Returns a hash number so this data type can be used for
      * bucketing and stored in a Hash implementation like a
      * HashMap, HashTable, HashSet, etc.
@@ -167,6 +187,6 @@ class CustomFileReader {
             return false;
         }
 
-        return comparedReader.getScanner() == s;
+        return comparedReader.getPath().equals(path);
     }
 }
